@@ -1,10 +1,13 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import RegistrationForm, LoginForm
+
+import os
 
 app  = Flask(__name__)
 
 app.config['SECRET_KEY'] = '775d4dd5030fa4450e21705f58cbadf2'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['FILE_UPLOADS'] = 'C:\\Users\\user\\Desktop\\python\\blog\\Flask_Blog\\static\\files\\uploads'
 
 myposts = [
     {
@@ -55,6 +58,16 @@ def login():
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+@app.route('/upload-file', methods=['GET', 'POST'])
+def upload():
+
+    if request.method == 'POST':
+        if request.files:
+            wb = request.files['workbook']
+            wb.save(os.path.join(app.config['FILE_UPLOADS'], wb.filename))
+            return redirect(request.url)
+    return render_template('upload-file.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
