@@ -4,6 +4,7 @@ from forms import RegistrationForm, LoginForm
 app  = Flask(__name__)
 
 app.config['SECRET_KEY'] = '775d4dd5030fa4450e21705f58cbadf2'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 myposts = [
     {
@@ -47,6 +48,7 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        #validate particular login creds
         if form.email.data == 'pat@innovativetoll.com' and form.password.data == 'erty':
             flash('Login Success', 'success')
             return redirect(url_for('home'))
